@@ -116,7 +116,7 @@ void daGy_Ctrl_c::setTarget() {
 
     for (s32 i = 0; i < m329; i++) {
         daGy_c* pfVar2 = (daGy_c*)fopAcM_SearchByID(m360[i]);
-        if ((pfVar2 != NULL) && (pfVar2 != NULL) && (pfVar2->m2B0 != 0)) {
+        if ((pfVar2 != NULL) && (pfVar2 != NULL) && (pfVar2->mMode != 0)) {
             m4AC = false;
         }
     }
@@ -127,13 +127,13 @@ void daGy_Ctrl_c::setTarget() {
 #endif
 
     switch (m35C) {
-    case 1:
-        dCam_getBody()->SetTypeForce("WaterBattle", NULL);
-        break;
+        case 1:
+            dCam_getBody()->SetTypeForce("WaterBattle", NULL);
+            break;
 
-    case 2:
-        dCam_getBody()->SetTypeForce("BoatBattle", NULL);
-        break;
+        case 2:
+            dCam_getBody()->SetTypeForce("BoatBattle", NULL);
+            break;
     }
 }
 
@@ -142,19 +142,19 @@ bool daGy_Ctrl_c::setPathTargetPos() {
     cXyz sp24;
 
     switch (m320) {
-    case 0:
-        sp24 = dComIfGp_getPlayer(0)->current.pos;
-        m318 = l_HIO.m1C;
-        m34C += l_HIO.m0A;
-        break;
+        case 0:
+            sp24 = dComIfGp_getPlayer(0)->current.pos;
+            m318 = l_HIO.m1C;
+            m34C += l_HIO.m0A;
+            break;
 
-    case 1:
-        if (dComIfGp_getShipActor() != NULL) {
-            sp24 = dComIfGp_getShipActor()->current.pos;
-            m318 = l_HIO.m18;
-            m34C += l_HIO.m0C;
-        }
-        break;
+        case 1:
+            if (dComIfGp_getShipActor() != NULL) {
+                sp24 = dComIfGp_getShipActor()->current.pos;
+                m318 = l_HIO.m18;
+                m34C += l_HIO.m0C;
+            }
+            break;
     }
 
     sp24.y = getWaterY(sp24);

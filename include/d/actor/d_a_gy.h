@@ -7,6 +7,10 @@
 #include "d/d_bg_s_acch.h"
 #include "d/d_particle.h"
 
+#include "c/c_damagereaction.h"
+
+class daGy_Ctrl_c;
+
 class daGy_c : public fopEn_enemy_c {
 public:
     void _nodeControl(J3DNode*, J3DModel*);
@@ -41,7 +45,7 @@ public:
     void setWave();
     void lineCheck(cXyz*, cXyz*);
     void checkTgHit();
-    void getWaterY();
+    f64 getWaterY();
     bool _execute();
     void drawDebug();
     bool _draw();
@@ -49,39 +53,76 @@ public:
     cPhs_State _create();
     bool _delete();
 
+    static const u32 m_heapsize;
+    static const char m_arcname[];
+
 public:
-    /* 0x2AC */ u8 m2AC[0x2B0 - 0x2AC];
-    /* 0x2B0 */ s32 m2B0;
-    /* 0x2B4 */ u8 m2B4[0x2D4 - 0x2B4];
+    /* 0x2AC */ int m2AC;
+    /* 0x2B0 */ s32 mMode;
+    /* 0x2B4 */ int m2B4;
+    /* 0x2B8 */ daGy_Ctrl_c* m2B8;
+    /* 0x2BC */ cXyz m2BC;
+    /* 0x2C8 */ request_of_phase_process_class m2C8;
+    /* 0x2D0 */ u8 m2D0[0x2D4 - 0x2D0];
     /* 0x2D4 */ mDoExt_McaMorf* mpMorf;
     /* 0x2D8 */ mDoExt_invisibleModel m2D8;
     /* 0x2E0 */ dBgS_Acch mAcch;
     /* 0x4A4 */ dBgS_AcchCir mAcchCir;
-    /* 0x4E4 */ u8 m4E4[0x50C - 0x4E4];
-    /* 0x50C */ dCcD_GObjInf m50C;
-    /* 0x604 */ u8 m604[0x624 - 0x604];
-    /* 0x624 */ cM3dGSph m624;
-    /* 0x638 */ u8 m638[0x8C4 - 0x638];
-    /* 0x8C4 */ dCcD_GStts mGStts;
+    /* 0x4E4 */ f32 m4E4;
+    /* 0x4E8 */ f32 m4E8;
+    /* 0x4EC */ f32 m4EC;
+    /* 0x4F0 */ f32 m4F0;
+    /* 0x4F4 */ u8 m4F4[0x4F8 - 0x4F4];
+    /* 0x4F8 */ int m4F8;
+    /* 0x4FC */ int m4FC;
+    /* 0x500 */ int m500;
+    /* 0x504 */ u8 m504;
+    /* 0x505 */ u8 m505[0x508 - 0x505];
+    /* 0x508 */ f32 m508;
+    /* 0x50C */ dCcD_Sph m50C;
+    /* 0x638 */ dCcD_Sph m638;
+    /* 0x764 */ dCcD_Cps m764;
+    /* 0x89C */ cXyz m89C;
+    /* 0x8A8 */ dCcD_Stts m8A8;
     /* 0x8E4 */ u32 m8E4;
-    /* 0x8E8 */ u8 m8E8[0x978 - 0x8E8];
-    /* 0x978 */ dCcD_GStts m978;
-    /* 0x998 */ dCcD_GObjInf m998;
-    /* 0xA90 */ u8 mA90[0xAE0 - 0xA90];
-    /* 0xAE0 */ dBgS_AcchCir mAE0;
-    /* 0xB20 */ dBgS_Acch mB20;
-    /* 0xCE4 */ u8 mCE4[0xD08 - 0xCE4];
+    /* 0x8E8 */ u8 m8E8[0x8EC - 0x8E8];
+    /* 0x8EC */ int m8EC;
+    /* 0x8F0 */ uint m8F0;
+    /* 0x8F4 */ s16 m8F4;
+    /* 0x8F6 */ u8 m8F6[0x8F8 - 0x8F6];
+    /* 0x8F8 */ cXyz m8F8;
+    /* 0x904 */ cXyz m904;
+    /* 0x910 */ u8 m910[0x914 - 0x910];
+    /* 0x914 */ int m914;
+    /* 0x918 */ f32 m918;
+    /* 0x91C */ f32 m91C;
+    /* 0x920 */ f32 m920;
+    /* 0x924 */ int m924;
+    /* 0x928 */ int m928;
+    /* 0x92C */ enemyice m92C;
+    /* 0xCE4 */ JntHit_c* mCE4;
+    /* 0xCE8 */ u8 mCE8;
+    /* 0xCE9 */ u8 mCE9[0xCEC - 0xCE9];
+    /* 0xCEC */ cXyz mCEC;
+    /* 0xCF8 */ Quaternion mCF8;
     /* 0xD08 */ cXyz mD08;
-    /* 0xD14 */ u8 mD14[0xD15 - 0xD14];
-    /* 0xD15 */ u8 mD15;
-    /* 0xD16 */ u8 mD16[0xD18 - 0xD16];
+    /* 0xD14 */ u8 mAnmIdx;
+    /* 0xD15 */ u8 mPrmIdx;
+    /* 0xD16 */ u8 mD16;
+    /* 0xD17 */ u8 mD17[0xD18 - 0xD17];
     /* 0xD18 */ dPa_waveEcallBack mD18;
     /* 0xD7C */ dPa_waveEcallBack mD7C;
     /* 0xDE0 */ dPa_splashEcallBack mDE0;
-    /* 0xDFC */ u8 mDFC[0xE14 - 0xDFC];
-    /* 0xE14 */ cBgS_LinChk mE14;
-    /* 0xE6C */ u8 mE6C[0xE90 - 0xE6C];
-};
+    /* 0xDFC */ cXyz mDFC;
+    /* 0xE08 */ csXyz mE08;
+    /* 0xE0E */ u8 mE0E[0xE10 - 0xE0E];
+    /* 0xE10 */ f32 mE10;
+    /* 0xE14 */ dBgS_LinChk mE14;
+    /* 0xE80 */ bool mE80;
+    /* 0xE81 */ u8 mE81[0xE84 - 0xE81];
+    /* 0xE84 */ cXyz mE84;
+
+}; // Size: 0xE90
 
 class daGy_HIO_c {
 public:

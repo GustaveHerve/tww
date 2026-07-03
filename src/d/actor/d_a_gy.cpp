@@ -5,7 +5,13 @@
 
 #include "d/dolzel_rel.h" // IWYU pragma: keep
 #include "d/actor/d_a_gy.h"
+#include "d/d_bg_s_func.h"
 #include "d/d_cc_d.h"
+
+const char daGy_c::m_arcname[] = "Gy";
+const u32 daGy_c::m_heapsize = 0x3FA0;
+
+static float l_HIO;
 
 static dCcD_SrcSph l_sph_head_src = {
     // dCcD_SrcGObjInf
@@ -36,7 +42,6 @@ static dCcD_SrcSph l_sph_head_src = {
     }},
 };
 
-
 static dCcD_SrcSph l_sph_src = {
     // dCcD_SrcGObjInf
     {
@@ -65,7 +70,6 @@ static dCcD_SrcSph l_sph_src = {
         /* Radius */ 180.0f,
     }},
 };
-
 
 static dCcD_SrcCps l_cps_src = {
     // dCcD_SrcGObjInf
@@ -96,7 +100,6 @@ static dCcD_SrcCps l_cps_src = {
         /* Radius */ 60.0f,
     }},
 };
-
 
 /* 000000EC-000003CC       .text __ct__10daGy_HIO_cFv */
 daGy_HIO_c::daGy_HIO_c() {
@@ -141,6 +144,25 @@ void daGy_c::setAtCollision() {
 /* 00000E74-00000F3C       .text setCollision__6daGy_cFv */
 void daGy_c::setCollision() {
     /* Nonmatching */
+    m638.SetR(140.0f);
+
+    // cM3dGSph::SetR(float)
+    // cM3dGSph::SetC(const cXyz&)
+    // dComIfG_Ccsp()
+    // cM3dGLin::SetStartEnd(const cXyz&, const cXyz&)
+    // cM3dGCps::SetR(float)
+    // cCcD_ObjHitInf::OnAtSetBit()
+    // cCcD_ObjHitInf::OnAtHitBit()
+    // cCcD_ObjHitInf::SetAtAtp(int)
+    // dCcD_GObjInf::SetAtSpl(dCcG_At_Spl)
+    // dCcD_GObjInf::SetAtSe(unsigned char)
+    // cCcD_ObjHitInf::OffCoSPrmBit(unsigned long)
+    // cCcD_ObjHitInf::OffAtSetBit()
+    // cCcD_ObjHitInf::OffAtHitBit()
+    // cCcD_ObjHitInf::OnCoSPrmBit(unsigned long)
+    // cCcD_ObjHitInf::ChkCoHit() const
+    // dCcD_GObjInf::GetCoHitAc()
+    // fopAcM_GetName(void*)
 }
 
 /* 00000F3C-00000FC4       .text setAimSpeedF__6daGy_cFv */
@@ -151,6 +173,8 @@ void daGy_c::setAimSpeedF() {
 /* 00000FC4-00000FDC       .text modeDiveInit__6daGy_cFv */
 void daGy_c::modeDiveInit() {
     /* Nonmatching */
+    mMode = 0;
+    m508 = 0.0f;
 }
 
 /* 00000FDC-000012DC       .text modeDive__6daGy_cFv */
@@ -264,8 +288,13 @@ void daGy_c::setWave() {
 }
 
 /* 00003268-000032E4       .text lineCheck__6daGy_cFP4cXyzP4cXyz */
-void daGy_c::lineCheck(cXyz*, cXyz*) {
+void daGy_c::lineCheck(cXyz* i_start, cXyz* i_end) {
     /* Nonmatching */
+    mE14.Set(i_start, i_end, this);
+    if (dComIfG_Bgsp()->LineCross(&mE14)) {
+        *i_end = mE14.GetCross();
+        mE80 = true;
+    }
 }
 
 /* 000032E4-000038EC       .text checkTgHit__6daGy_cFv */
@@ -274,8 +303,32 @@ void daGy_c::checkTgHit() {
 }
 
 /* 000038EC-000039AC       .text getWaterY__6daGy_cFv */
-void daGy_c::getWaterY() {
+f64 daGy_c::getWaterY() {
     /* Nonmatching */
+    cXyz local_18;
+    f64 dVar1;
+
+    if (mAcch.ChkWaterHit()) {
+        dVar1 = mAcch.m_wtr.GetHeight();
+        if (current.pos.y > dVar1) {
+            gravity = -2.5f;
+            dVar1 = current.pos.y;
+        } else {
+            gravity = 0.0f;
+        }
+    } else {
+        local_18 = current.pos;
+        local_18.y += 1000.0f;
+        dVar1 = dBgS_GetWaterHeight(local_18);
+        if (current.pos.y > dVar1) {
+            gravity = -2.5f;
+            dVar1 = current.pos.y;
+        } else {
+            gravity = 0.0f;
+        }
+    }
+
+    return dVar1;
 }
 
 /* 000039AC-00004264       .text _execute__6daGy_cFv */
